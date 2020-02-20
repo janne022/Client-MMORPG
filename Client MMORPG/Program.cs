@@ -10,25 +10,21 @@ namespace Client_MMORPG
 {
     class Program
     {
-
         public static void thread1(NetworkStream stream)
         {
             while (true)
             {
                 byte[] data2 = new byte[256];
-
                 String responeseData = String.Empty;
-
                 int bytes = stream.Read(data2, 0, data2.Length);
-
-                responeseData = System.Text.Encoding.ASCII.GetString(data2, 0, bytes);
-
+                responeseData = System.Text.Encoding.UTF8.GetString(data2, 0, bytes);
                 Console.WriteLine(responeseData);
             }
         }
 
         static void Main(string[] args)
         {
+            Console.Title = "Jannes Chatt Program";
             Console.WriteLine("type IP");
             string ip = Console.ReadLine();
 
@@ -38,8 +34,6 @@ namespace Client_MMORPG
 
             Console.WriteLine("Type username");
             string username = Console.ReadLine();
-
-
             TcpClient client = new TcpClient(ip, port);
             NetworkStream stream = client.GetStream();
             Thread t = new Thread(() => thread1(stream));
