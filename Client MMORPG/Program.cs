@@ -10,7 +10,7 @@ namespace Client_MMORPG
 {
     class Program
     {
-        public static void thread1(NetworkStream stream)
+        public static void LiveChat(NetworkStream stream)
         {
             while (true)
             {
@@ -36,8 +36,8 @@ namespace Client_MMORPG
             string username = Console.ReadLine();
             TcpClient client = new TcpClient(ip, port);
             NetworkStream stream = client.GetStream();
-            Thread t = new Thread(() => thread1(stream));
-            t.Start();
+            Thread liveChat = new Thread(() => LiveChat(stream));
+            liveChat.Start();
             Console.WriteLine("You can now begin communicating");
             while (true)
             {
