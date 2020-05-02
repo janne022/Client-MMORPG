@@ -15,6 +15,10 @@ namespace Client_MMORPG
         {
             try
             {
+                /*this while loop uses stream.Read to get data from the server, the stream we are using is the server and by reading it
+                 * we can get the bytes coming from the stream and then we can use the GetString to convert bytes to a string, which we then
+                 * print to the user
+                */
                 while (true)
                 {
                     byte[] data2 = new byte[256];
@@ -24,6 +28,7 @@ namespace Client_MMORPG
                     Console.WriteLine(responeseData);
                 }
             }
+            //if the server closes down for some reason, it will deliver this message to you and return you to the start.
             catch (Exception)
             {
                 Console.WriteLine("It looks the the connection with the server broke");
@@ -33,18 +38,24 @@ namespace Client_MMORPG
 
         public static void Start()
         {
+            //just empty variables and title for program
             string ip;
             int port;
             Console.Title = "Jannes Chatt Program";
-            //Checks if the ip and port typed by user is working, does not allow user out of loop until connection works
             while (true)
             {
+                /*Asks for IP and Port, then parses the port to an int. We do this because the TcpClient wants the ip/hostname as a string
+                 * and then port as an int.
+                */ 
                 Console.WriteLine("type IP");
                 ip = Console.ReadLine();
 
                 Console.WriteLine("type port");
                 string portString = Console.ReadLine();
                 bool success = int.TryParse(portString, out port);
+                /*This trycatch is a test for if it can actually connect to the server, if it fails it will notify the user and 
+                 *go back to the start of the loop.
+                */
                 try
                 {
                     TcpClient testClient = new TcpClient(ip, port);
@@ -56,6 +67,7 @@ namespace Client_MMORPG
                     Console.WriteLine("Could not connect, doublecheck the ip/port and try again");
                 }
             }
+            //Connects to the server and asks user for the username and password, it then sends this information to the server.
             TcpClient client = new TcpClient(ip, port);
             Console.Clear();
             Console.WriteLine("Connected");
@@ -75,13 +87,11 @@ namespace Client_MMORPG
                 Console.WriteLine("It looks the the connection with the server broke");
                 return;
             }
-
-
-
-
+            //This starts a thread. It uses lambda expressions and this is the thread that writes out all information coming from the server.
             Thread liveChat = new Thread(() => LiveChat(stream));
             liveChat.Start();
             Console.WriteLine("You can now begin communicating");
+            //Now the user can type his own messages and anything he says is converted to Bytes and sent using the stream.Write() function
             try
             {
                 while (true)
@@ -97,7 +107,7 @@ namespace Client_MMORPG
                 return;
             }
         }
-
+        //Main method just starts the program and the while loop is to ensure that if a trycatch boots a player out from the program, it will start it again.
         static void Main(string[] args)
         {
             while (true)
